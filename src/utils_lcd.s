@@ -2,8 +2,9 @@ GPIO_PORTA_DATA		EQU	0x400043FC	; Port A Data
 
 SSI0_DR				EQU	0x40008008
 SSI0_SR				EQU	0x4000800C
-	
-WRITTEN_VALUE		EQU	0x20001600
+
+ADJUST_COUNT		EQU	0x20001600
+ADJUST_STATUS		EQU	0x20001608
 	
 				AREA    lcdscreen, CODE, READONLY
 				THUMB
@@ -17,10 +18,17 @@ WRITTEN_VALUE		EQU	0x20001600
 				EXPORT		LCD_OUT_STR
 				EXPORT		lcdOutWaterLevel
 				EXPORT		lcdClearWaterLevel
+				EXPORT		lcdSettingTarget
 
 unit_ml 		DCB		"ml"
 				DCB		0x04
 blank_text		DCB		"         "
+				DCB		0x04
+blank_text2		DCB		"    "
+				DCB		0x04
+sens_text		DCB		"SENS"
+				DCB		0x04
+target_text		DCB		"TRGT"
 				DCB		0x04
 
 ; ASCII table for characters to be displayed
@@ -320,6 +328,47 @@ lcdClearWaterLevel
 				BL		LCD_SET_XY
 				LDR		R5, =blank_text
 				BL		LCD_OUT_STR
+				POP		{R0-R5, LR}
+				BX		LR
+
+;**********************************************************************
+
+lcdSettingTarget
+				PUSH	{R0-R5, LR}
+				MOV		R2, R0
+				MOV		R0, #50
+				MOV		R1, #2
+				BL		LCD_SET_XY
+				
+				LDR		R3, =ADJUST_COUNT
+				LDR		R4, [R3]
+				SUBS	R4, R4, #1
+				BNE		EXIT
+				MOV32	R4, #200
+				
+				LDR		R1, =ADJUST_STATUS; 0: OFF 1: ON
+				LDR		R2, [R1]
+				CMP		R2, #0
+				BEQ		TURNON
+				LDR		R5, =blank_text2
+				MOV		R2, #0
+				STR		R2, [R1]
+				B		DONE
+
+TURNON
+				CMP		R2, #0
+				BNE		SENSITIVITY
+				LDR		R5, =target_text
+				MOV		R2, #1
+				STR		R2, [R1]
+				B		DONE
+SENSITIVITY
+				LDR		R5, =sens_text
+DONE			
+				BL		LCD_OUT_STR
+
+EXIT
+				STR		R4, [R3]
 				POP		{R0-R5, LR}
 				BX		LR
 
