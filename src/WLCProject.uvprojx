@@ -483,6 +483,11 @@
               <FileType>2</FileType>
               <FilePath>.\start_lcd.s</FilePath>
             </File>
+            <File>
+              <FileName>CONVERT.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\CONVERT.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -176,7 +176,7 @@ initLCD
 			
 			LDR		R1,=GPIO_PORTA_DATA
 			LDR		R0, [R1]
-			ORR		R0, #0x00				; BACKLIGHT PA4
+			ORR		R0, #0x10				; BACKLIGHT PA4
 			STR		R0, [R1]
 			
 			; Setup SSI	

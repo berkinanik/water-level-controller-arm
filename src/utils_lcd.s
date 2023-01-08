@@ -3,15 +3,25 @@ GPIO_PORTA_DATA		EQU	0x400043FC	; Port A Data
 SSI0_DR				EQU	0x40008008
 SSI0_SR				EQU	0x4000800C
 	
+WRITTEN_VALUE		EQU	0x20001600
+	
 				AREA    lcdscreen, CODE, READONLY
 				THUMB
-							
+				
+				IMPORT		CONVERT
+				
 				EXPORT		LCD_SET_XY
 				EXPORT		LCD_PRINT_CHAR
 				EXPORT		LCD_PRINT_BYTE
 				EXPORT		LCD_CLEAR
 				EXPORT		LCD_OUT_STR
+				EXPORT		lcdOutWaterLevel
+				EXPORT		lcdClearWaterLevel
 
+unit_ml 		DCB		"ml"
+				DCB		0x04
+blank_text		DCB		"         "
+				DCB		0x04
 
 ; ASCII table for characters to be displayed
 ASCII	DCB		0x00, 0x00, 0x00, 0x00, 0x00 ;// 20
@@ -280,8 +290,40 @@ NEXTSTRCHAR
 STRDONE
 				POP		{R0-R5,LR}
 				BX		LR
-			
-;*****************************************************************
+				
+;*********************************************************************
+
+lcdOutWaterLevel
+				PUSH	{R0-R5, LR}
+				BL		LCD_SET_XY
+				MOV		R4, R2
+				BL		CONVERT
+				LDR		R5,=0x20000480
+				BL		LCD_OUT_STR
+				LDR		R3,=0x20000488
+				LDR		R4, [R3]
+				MOV		R5, #5
+ADDOFFSET		ADD		R0, R5
+				SUBS	R4, R4, #0x01
+				BNE		ADDOFFSET
+				ADD		R0, R3
+				BL		LCD_SET_XY
+				LDR		R5,=unit_ml
+				BL		LCD_OUT_STR
+				POP		{R0-R5, LR}
+				BX		LR
+
+;**********************************************************************
+
+lcdClearWaterLevel
+				PUSH	{R0-R5, LR}
+				BL		LCD_SET_XY
+				LDR		R5, =blank_text
+				BL		LCD_OUT_STR
+				POP		{R0-R5, LR}
+				BX		LR
+
+;**********************************************************************
 
 
 				ALIGN
