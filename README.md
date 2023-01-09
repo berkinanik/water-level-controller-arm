@@ -32,23 +32,44 @@ The following hardware and software will be used in this project:
 - TM4C microcontroller
 - Water level sensor
 - Nokia 5110 LCD screen
-- Two water pumps
+- ~~Two water pumps~~
+- One Step Motor
 - On-board RGB LED
 - Potentiometer (optional)
-- 4x4 keypad (optional)
+- ~~4x4 keypad (optional)~~
 - TivaWare software library
+
+### Pin Configuration
+- Onboard I/O:
+  -	PF1 Red LED
+  -	PF2 Blue LED
+  -	PF3 Green LED
+  -	PF4 SW1 (Left)
+- Peripheral I/O:
+  -	PB0 to PB3 Step Motor
+  -	ADC0 PE3 Potentiometer
+  -	ADC1 PE2 Water Level Sensor
+- Nokia 5110 LCD:
+  -	RST PA7
+  -	CE PA3
+  -	DC(DO) PA6
+  -	DIN PA5
+  -	CLK PA2
+  -	VCC 3.3V
+  -	BL(DL) PA4
+  -	GND GND
 
 ### Project Structure
 
 The project code is organized as follows:
 
 - `src/main.c`: main entry point and overall system control
-- `src/sensors.c`: functions for interacting with the water level sensor
-- `src/pumps.c`: functions for controlling the water pumps
-- `src/display.c`: functions for displaying information on the LCD screen
-- `src/led.c`: functions for controlling the RGB LED
-- `src/potentiometer.c`: functions for reading the potentiometer (optional)
-- `src/keypad.c`: functions for reading the 4x4 keypad (optional)
+- `src/init.c`: initialization of GPIO and ADCs
+- `src/init_lcd.s`: initialization of the Nokia 5110 LCD using ARM Assembly
+- `src/utils_lcd.s`: utility functions used for driving the LCD
+- `src/start_lcd.s`: functionality for printing default texts to the LCD 
+- `src/CONVERT.s`: assembly module for converting an int value to ASCII string
+- `src/DELAY100.s`: assembly module for delaying 100ms
 
 ### How to Build and Run
 
