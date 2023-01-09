@@ -89,7 +89,7 @@ startLCD
 				STR		R1, [R0]
 				; Set adjust status starting value
 				LDR		R0, =0x20001608
-				MOV		R1, #0
+				MOV		R1, #1
 				STR		R1, [R0]
 				
 				POP		{LR}

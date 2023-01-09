@@ -335,7 +335,7 @@ lcdClearWaterLevel
 
 lcdSettingTarget
 				PUSH	{R0-R5, LR}
-				MOV		R2, R0
+				MOV		R6, R0
 				MOV		R0, #50
 				MOV		R1, #2
 				BL		LCD_SET_XY
@@ -344,19 +344,20 @@ lcdSettingTarget
 				LDR		R4, [R3]
 				SUBS	R4, R4, #1
 				BNE		EXIT
-				MOV32	R4, #200
 				
 				LDR		R1, =ADJUST_STATUS; 0: OFF 1: ON
 				LDR		R2, [R1]
 				CMP		R2, #0
 				BEQ		TURNON
+				MOV32	R4, #150
 				LDR		R5, =blank_text2
 				MOV		R2, #0
 				STR		R2, [R1]
 				B		DONE
 
 TURNON
-				CMP		R2, #0
+				CMP		R6, #0
+				MOV32	R4, #200
 				BNE		SENSITIVITY
 				LDR		R5, =target_text
 				MOV		R2, #1
@@ -364,6 +365,8 @@ TURNON
 				B		DONE
 SENSITIVITY
 				LDR		R5, =sens_text
+				MOV		R2, #1
+				STR		R2, [R1]
 DONE			
 				BL		LCD_OUT_STR
 
