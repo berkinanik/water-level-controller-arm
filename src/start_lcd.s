@@ -44,7 +44,7 @@ startLCD
 				MOV		R0, #0
 				MOV		R1, #0
 				BL		LCD_SET_XY
-				LDR		R5,=berkin_title
+				LDR		R5, =berkin_title
 				BL		LCD_OUT_STR
 				
 				;MOV		R0, #0
